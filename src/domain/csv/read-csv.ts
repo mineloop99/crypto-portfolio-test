@@ -31,7 +31,16 @@ export function readCsv<C extends string>(text: string, requiredColumns: readonl
     issues.push(issue(`Duplicate column name(s) in header: ${[...new Set(duplicates)].join(", ")}.`, { line: 1 }));
   }
   const missing = requiredColumns.filter((c) => !header.includes(c));
-  if (missing.length > 0) {
+  const otherDelimiter = header.length === 1 ? detectOtherDelimiter(header[0], requiredColumns) : null;
+  if (otherDelimiter) {
+    issues.push(
+      issue(
+        `The file looks ${otherDelimiter}-separated (Excel does this with some regional settings). ` +
+          `Save it as a comma-separated CSV with "." as the decimal separator.`,
+        { line: 1 },
+      ),
+    );
+  } else if (missing.length > 0) {
     issues.push(
       issue(`Missing required column(s): ${missing.join(", ")}. Expected header: ${requiredColumns.join(",")}.`, {
         line: 1,
@@ -56,6 +65,21 @@ export function readCsv<C extends string>(text: string, requiredColumns: readonl
   if (issues.length > 0) return { ok: false, issues };
   if (rows.length === 0) return { ok: false, issues: [issue("The file has a header but no data rows.")] };
   return { ok: true, rows };
+}
+
+const OTHER_DELIMITERS = { ";": "semicolon", "\t": "tab" } as const;
+
+/**
+ * A header that parses as one column but contains the expected names split by ";" or a tab is almost certainly a
+ * spreadsheet export with a different separator. We explain that instead of listing every column as missing; we do
+ * not guess-parse it, because such exports usually also use "," as the decimal separator.
+ */
+function detectOtherDelimiter(headerCell: string, requiredColumns: readonly string[]): string | null {
+  for (const [delimiter, name] of Object.entries(OTHER_DELIMITERS)) {
+    const names = headerCell.split(delimiter).map((h) => h.trim());
+    if (names.length > 1 && requiredColumns.every((c) => names.includes(c))) return name;
+  }
+  return null;
 }
 
 const ISO_UTC = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(?:Z|\+00:00)$/;

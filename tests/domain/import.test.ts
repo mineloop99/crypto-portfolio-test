@@ -36,6 +36,14 @@ describe("trades.csv validation", () => {
     expect(issues[0].line).toBe(1);
   });
 
+  it("explains semicolon- or tab-separated exports instead of listing every column as missing", () => {
+    const semicolon = issuesOf("trade_id;timestamp;exchange;symbol;side;quantity;price_usd;fee_usd\nT1;2025-10-01T09:00:00Z;Binance;BTC;BUY;1;100,5;1\n");
+    expect(semicolon).toHaveLength(1);
+    expect(semicolon[0].message).toMatch(/^The file looks semicolon-separated/);
+    const tab = issuesOf(HEADER.replaceAll(",", "\t") + "\nT1\t2025-10-01T09:00:00Z\tBinance\tBTC\tBUY\t1\t100\t1\n");
+    expect(tab[0].message).toMatch(/^The file looks tab-separated/);
+  });
+
   it("rejects duplicate trade_id values and points to the first occurrence", () => {
     const issues = issuesOf(csv(ok("T1"), ok("T2"), ok("T1")));
     expect(issues).toEqual([
