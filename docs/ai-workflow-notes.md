@@ -90,3 +90,21 @@ now, use Next.js." — the go-ahead for milestone M0 as described in `docs/PLAN.
   explorer to 40 trades whose fees ($486.42) and realized P&L (−$463.75) match the BTC holdings row.
 
 **Candidate review:** _pending._
+
+## 2026-09-23 — Invalid sample files and the semicolon hint
+
+**Prompt (translated):** "Give me a few wrong files."
+
+**Agent response:** generated ten invalid files (several are the real 200-row sample with one realistic defect: a
+copy-pasted duplicate row, a one-satoshi oversell on a full close, a SELL timestamp mistyped a month early, a European
+Excel export) and POSTed each to the API before handing them over — all ten rejected with the intended messages.
+Two observations from that run:
+1. agent bug, fixed immediately: a single-problem import said "Fix them" (commit "Use singular wording…");
+2. open question for the candidate: the semicolon export was reported as "missing all 8 columns" — correct but not
+   actionable.
+
+**Candidate decisions:** "Do the semicolon one too" → a header that is one cell containing every expected name split
+by `;` or a tab now gets one explanatory message; the agent kept rejecting rather than guess-parsing (decimal commas
+make that ambiguous) and told the candidate so. "Yes, add them" → the samples are committed under
+`public/samples/invalid/`. The candidate's local `allowedDevOrigins` edit in `next.config.ts` is dev-only and stays
+uncommitted, at the candidate's request.
