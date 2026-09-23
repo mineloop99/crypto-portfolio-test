@@ -1,6 +1,6 @@
 # Implementation Plan — AI-Assisted Crypto Portfolio Analytics
 
-Spec: `docs/spec/assessment.pdf`. Deadline: **Fri 2026-09-25 16:00 (UTC+7)**. Budget: 6–10 h.
+Spec: the assessment brief (kept locally in `docs/spec/`, not committed — it is not ours to publish). Deadline: **Fri 2026-09-25 16:00 (UTC+7)**. Budget: 6–10 h.
 
 ## 1. What the data tells us (profiled before design)
 

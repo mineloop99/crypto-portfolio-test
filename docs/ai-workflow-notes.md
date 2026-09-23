@@ -32,3 +32,28 @@ Tool: Claude Code (CLI). The candidate writes prompts in Vietnamese; quotes belo
 3. Repository — keep it local for now; use Next.js.
 
 **Outcome:** plan updated (`docs/PLAN.md`, sections "Persistence decision" and "Scope decision").
+
+## 2026-09-23 — M0: domain engine, validation, tests
+
+**Prompt (translated):** "1. Don't store the CSV. 2. If it's not required, one row per coin. 3. Keep the repo local for
+now, use Next.js." — the go-ahead for milestone M0 as described in `docs/PLAN.md`.
+
+**Agent response:**
+- Scaffolded Next.js 16; noticed the generated `AGENTS.md` warns that this Next.js version differs from the model's
+  training data and asks agents to read `node_modules/next/dist/docs/` first — noted for the UI/API milestone.
+- Wrote the pure domain layer (`src/domain/`): decimal helper, CSV reader, trade/price validators, ledger, valuation,
+  import boundary. No React/Next imports.
+- Wrote 49 tests: hand-computed cases for every rule listed in the brief, parser edge cases, and a golden test on the
+  supplied data against `scripts/oracle.py` (independent Python implementation) at 20 decimal places plus the
+  cash-flow invariant.
+- Self-correction before any push: the first commit included the assessment PDF; the agent removed it from history
+  and git-ignored `docs/spec/` because the brief is not the candidate's to publish.
+
+**Verification:**
+- All 49 tests passed on the first run, which is not proof on its own, so the engine was mutation-checked by hand:
+  (1) BUY fee not capitalised → 15 tests fail; (2) SELL fee ignored → 11 fail; (3) full close via `avg × qty`
+  instead of removing the whole basis → 1 fails (the repeating-decimal test — expected, since the difference is only
+  rounding residue); (4) average cost recomputed and rounded on SELL → 6 fail. Mutations reverted, suite green.
+- `tsc --noEmit` and ESLint clean.
+
+**Candidate review:** _pending — see checklist given in chat._
