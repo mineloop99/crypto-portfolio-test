@@ -1,0 +1,4 @@
+trade_id,timestamp,exchange,symbol,side,quantity,price_usd,fee_usd
+Y-1,2025-10-01T09:00:00Z,Binance,BTC,BUY,0.5,100000,5
+Y-2,2025-10-02T09:00:00Z,Binance,BTC,BUY,0.5,100000
+Y-3,2025-10-03T09:00:00Z,Binance,BTC,SELL,0.1,101000,1,note
