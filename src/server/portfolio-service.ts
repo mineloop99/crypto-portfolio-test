@@ -52,7 +52,9 @@ export function computePortfolio(
     throw new ServiceError(
       "invalid_csv",
       422,
-      `${fileName} was not imported: ${count} problem${count === 1 ? "" : "s"} found. Fix them and import the file again.`,
+      count === 1
+        ? `${fileName} was not imported: 1 problem found. Fix it and import the file again.`
+        : `${fileName} was not imported: ${count} problems found. Fix them and import the file again.`,
       result.issues,
     );
   }
