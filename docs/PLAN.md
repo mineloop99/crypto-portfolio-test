@@ -78,8 +78,9 @@ asks. No per-exchange scope (not required).
 
 - KPI cards: value, cost basis, realized, unrealized, total P&L (+ % of cost), total fees, price `as_of` timestamp.
 - Holdings table: every required column; sign shown with `+`/`−` and ▲/▼ icons as well as colour.
-- Charts: allocation donut by current value; grouped bars for realized vs unrealized P&L per asset (zero line, negatives
-  below). Each chart has a text alternative.
+- Charts: allocation by current value; grouped bars for realized vs unrealized P&L per asset (zero line, negatives
+  below). Each chart has a text alternative. *(Changed during M1: allocation uses sorted horizontal bars instead of a
+  donut, because the five shares are close together.)*
 - Transaction explorer: asset search, exchange/side filters, date range, timestamp sort, pagination; shows all
   CSV fields plus gross value and fee.
 - States: loading skeletons, empty (no trades), invalid import (row-level error list), missing prices, and error

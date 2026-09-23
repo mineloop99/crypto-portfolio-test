@@ -108,3 +108,16 @@ by `;` or a tab now gets one explanatory message; the agent kept rejecting rathe
 make that ambiguous) and told the candidate so. "Yes, add them" → the samples are committed under
 `public/samples/invalid/`. The candidate's local `allowedDevOrigins` edit in `next.config.ts` is dev-only and stays
 uncommitted, at the candidate's request.
+
+## 2026-09-23 — M2 (part 1): docs, deployment readiness
+
+**Prompt (translated):** "OK, carry on — I don't need to deploy yet."
+
+**Agent response:**
+- Deployment readiness: the lockfile was written by pnpm 11 and Vercel may install with pnpm 10. A clean clone with
+  `npx pnpm@10 install --frozen-lockfile` silently ran pnpm 11 (the `packageManager` field makes pnpm switch
+  versions); with `npm_config_manage_package_manager_versions=false` it really ran pnpm 10.34.5 — install, build and
+  68 tests all OK. Declared `engines.node >= 20.9` (Next.js 16's minimum).
+- README rewritten from the create-next-app template to cover every section the brief asks for.
+- `AI_WORKFLOW.md` drafted from this log; the candidate's own checks and reasons are left as `TODO(candidate)` rather
+  than written by the agent.
