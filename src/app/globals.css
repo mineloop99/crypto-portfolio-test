@@ -1,26 +1,40 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+/*
+ * Light theme only (documented tradeoff). Chart and ink colours follow a validated data-viz palette:
+ * series-1/series-2 pass colour-vision-deficiency separation and 3:1 contrast on the surface.
+ */
+@theme {
+  --color-page: #f9f9f7;
+  --color-surface: #fcfcfb;
+  --color-ink: #0b0b0b;
+  --color-ink-2: #52514e;
+  --color-muted: #686762;
+  --color-grid: #e1e0d9;
+  --color-baseline: #c3c2b7;
+  --color-line: rgb(11 11 11 / 0.1);
+  --color-gain: #006300;
+  --color-loss: #b42323;
+  --color-series-1: #2a78d6;
+  --color-series-2: #eb6834;
+  --color-action: #1c5cab;
+  --color-action-hover: #184f95;
+  --color-warn-bg: #fff6e0;
+  --color-warn-line: #e0a400;
+  --color-danger-bg: #fdecec;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-page);
+  color: var(--color-ink);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
 }
