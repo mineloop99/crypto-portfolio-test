@@ -57,3 +57,36 @@ now, use Next.js." — the go-ahead for milestone M0 as described in `docs/PLAN.
 - `tsc --noEmit` and ESLint clean.
 
 **Candidate review:** _pending — see checklist given in chat._
+
+## 2026-09-23 — M1: API and UI
+
+**Prompt (translated):** "OK, continue."
+
+**Agent response / notable decisions:**
+- Read the Next.js 16.3 docs bundled in `node_modules/next/dist/docs/` before writing framework code (as the generated
+  `AGENTS.md` demands). Two things differed from the model's prior knowledge and were applied: `error.tsx` receives
+  `retry()` (not only `reset()`), and data files read at runtime must be listed in `outputFileTracingIncludes` to be
+  shipped with the Vercel function. Verified after `next build`: `route.js.nft.json` lists `data/trades.csv` and
+  `data/prices.csv`.
+- API: `GET`/`POST /api/portfolio`, zod contract shared with the client, decimals as strings, 422 with every issue,
+  413 above 2 MB, request id on every response.
+- Charts: the plan said "allocation donut". Following a data-viz checklist, the agent switched to sorted horizontal
+  bars because the five shares are close (14–26 %) and a donut hides small differences. The two-series P&L palette
+  was checked with a colour-vision-deficiency validator (PASS: ΔE 24.7 protan, contrast ≥ 3:1).
+- ESLint (`react-hooks/set-state-in-effect`) rejected the first version of the data hook; the initial load was
+  restructured so state is only set when the response arrives, with a cancellation flag.
+
+**Verification:**
+- 67 unit/API tests green, `tsc` and ESLint clean, production build OK.
+- Screenshots (desktop 1440 px, mobile 390 px) reviewed by the agent; headline numbers match the Python oracle.
+  Found and fixed three issues from the screenshots:
+  1. allocation axis ticks showed "+$4K" (signed formatter reused from the P&L axis);
+  2. the holdings footnote said rounded rows may differ from the total "by a cent" — the real data differs by
+     2 cents (unrealized rows add up to $651.67, exact total $651.65), so the note was corrected to "a few cents";
+  3. a closed asset's allocation showed "n/a (no current price)" when the real reason is a zero-value portfolio.
+- Scripted browser run against the production build (13/13 checks): invalid file lists 6 issues by line/column and
+  leaves the numbers unchanged; short sell rejected; an all-closed import shows $0 value and −$204.00 realized
+  (hand check: 10 × 180 − 2 − (10 × 200 + 2)); reset and reload return to the sample; clicking BTC filters the
+  explorer to 40 trades whose fees ($486.42) and realized P&L (−$463.75) match the BTC holdings row.
+
+**Candidate review:** _pending._
