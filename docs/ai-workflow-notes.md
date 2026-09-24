@@ -122,13 +122,13 @@ uncommitted, at the candidate's request.
 - `AI_WORKFLOW.md` drafted from this log; the candidate's own checks and reasons are left as `TODO(candidate)` rather
   than written by the agent.
 
-## 2026-09-24 — Candidate's mobile QA: the From/To filters
+## 2026-09-24 — Candidate's mobile QA: blank-looking date filters
 
-**Prompt (translated, with an iOS screenshot):** "Should we drop From and To? We don't have any from-address or
-to-address. This is another decision — add it to the AI workflow."
+**Candidate finding (translated, with an iOS screenshot):** the From/To filters are date filters, but on iOS Safari
+they show as blank boxes; asked for a better UI than that, and for the change to be logged in the AI workflow.
 
-**Agent response:** checked the brief first — "Date-range filtering" is a stated requirement of the transaction
-explorer, and From/To are those date inputs; on iOS Safari an empty date input shows no placeholder, so the bare
-labels read like wallet addresses. Recommended keeping the feature: relabelled to "From date" / "To date", fixed the
-"From" input overflowing the card (`min-w-0`), aligned the empty date inputs' height with the selects. 68 tests,
-`tsc` and ESLint clean; checked in a 390 px Chromium screenshot (iOS itself to be re-checked by the candidate).
+**Agent response:** checked the brief — "Date-range filtering" is a stated requirement of the transaction explorer, so
+the fix is presentation only. On iOS Safari an empty date input shows no placeholder, so the bare labels read like
+wallet addresses. Relabelled to "From date" / "To date", fixed the "From" input overflowing the card (`min-w-0`),
+aligned the empty date inputs' height with the selects. 68 tests, `tsc` and ESLint clean; checked in a 390 px
+Chromium screenshot; redeployed to Vercel.

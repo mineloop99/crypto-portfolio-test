@@ -219,25 +219,24 @@ change.
 Commits: *"Explain semicolon- and tab-separated exports on import"*, *"Add invalid trades.csv samples for trying the
 validation"*.
 
-### 8. My own mobile QA: a filter I wanted to remove
+### 8. My own mobile QA: date filters that looked blank
 
 **Goal and context.** After deploying to Vercel I went through the app on my phone (iOS Safari).
 
-**Prompt** (with a screenshot of the transaction filters).
-> Should we drop From and To? We don't have any from-address or to-address. This is another decision — add it to the
-> AI workflow.
+**What I found.** The From/To inputs are the date-range filter the brief asks for, but on iOS Safari an empty date
+input shows no placeholder: they rendered as two blank boxes labelled only "From" and "To". In a crypto app that
+reads like a wallet transfer rather than a date range, and the "From" box ran past the edge of the card. I sent the
+agent a screenshot and asked for a clearer UI, and to log it here.
 
 **Agent response.**
-- Checked the brief before deleting anything: the transaction explorer must support **date-range filtering**, and
-  From/To were those date filters. Removing them would drop a stated requirement, so it recommended keeping them.
-- Agreed the labels were the real problem. On iOS Safari an empty date input shows no placeholder, so a bare
-  "From"/"To" reads like a wallet transfer — a natural reading for a crypto app. It renamed them "From date" and
-  "To date".
-- The same screenshot showed the "From" box running past the edge of the card. It fixed the overflow (`min-w-0` on
-  the grid items and inputs) and aligned the height of the empty date inputs with the selects.
+- Checked the brief: date-range filtering is a stated requirement of the transaction explorer, so the fix belongs in
+  the presentation, not the feature.
+- Renamed the labels to "From date" and "To date".
+- Fixed the overflow (`min-w-0` on the grid items and inputs) and aligned the height of the empty date inputs with
+  the selects.
 
-**My review and outcome.** Kept the date filters with the new labels. The misunderstanding came from a real user
-reading, so the fix was clearer wording, not a smaller feature.
+**My review and outcome.** Accepted and redeployed to Vercel. Commit: *"Label the date-range filters as
+dates and stop them overflowing on mobile"*.
 
 ## What I would do differently
 
@@ -250,3 +249,19 @@ reading, so the fix was clearer wording, not a smaller feature.
   what M1 had to deliver. Restating the criteria in the go-ahead ("M1: API with 422 row errors, holdings with every
   column, explorer filters, all five UI states, desktop and 390 px screenshots") makes each step reviewable on its own,
   without opening the plan.
+
+## Future plan
+
+How I would take the same workflow from a solo take-home to a team repository:
+
+- **CI on every push and pull request (GitHub Actions).** Install with the locked pnpm version, then run
+  `tsc --noEmit`, ESLint, `pnpm test` and `next build`; add the Python reference check (`scripts/oracle.py`) and
+  browser end-to-end tests of the import → reset → filter flow on desktop and mobile viewports. A red check blocks the
+  merge.
+- **AI review on pull requests.** Every PR gets an automated AI review (for example Claude Code's GitHub Action)
+  focused on what matters most here: calculation correctness against the rules in the brief, rules the change adds
+  that the brief does not state, and missing tests. The AI review is a first pass; a person still approves the merge.
+- **Vercel preview per pull request,** so the reviewer checks the UI on desktop and phone before merging, the same QA I
+  did by hand for this submission.
+- **Work in small PRs instead of commits to `main`,** one milestone or concern each, with the agent's checkpoint list
+  as the PR description — the same structure as this document, but reviewable in GitHub.

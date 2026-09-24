@@ -233,5 +233,6 @@ function (verified in the build's `route.js.nft.json`).
 - Import a `prices.csv` alongside trades, and show when prices are stale.
 - Optional persistence (per-user storage behind authentication) if imports need to be shared.
 - Per-exchange scope and a time series of portfolio value.
-- Browser end-to-end tests in CI (the import/reset/filter flow is currently checked with a script during development).
+- CI on GitHub Actions (types, lint, tests, build, browser end-to-end tests) and AI review on pull requests — see
+  "Future plan" in [AI_WORKFLOW.md](AI_WORKFLOW.md#future-plan).
 - Dark theme with its own validated chart palette.
