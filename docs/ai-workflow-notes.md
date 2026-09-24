@@ -56,7 +56,7 @@ now, use Next.js." — the go-ahead for milestone M0 as described in `docs/PLAN.
   rounding residue); (4) average cost recomputed and rounded on SELL → 6 fail. Mutations reverted, suite green.
 - `tsc --noEmit` and ESLint clean.
 
-**Candidate review:** _pending — see checklist given in chat._
+**Candidate review:** ran `pnpm test` themselves; for cases not checkable by hand, relied on the suite and the mutation check.
 
 ## 2026-09-23 — M1: API and UI
 
@@ -89,7 +89,7 @@ now, use Next.js." — the go-ahead for milestone M0 as described in `docs/PLAN.
   (hand check: 10 × 180 − 2 − (10 × 200 + 2)); reset and reload return to the sample; clicking BTC filters the
   explorer to 40 trades whose fees ($486.42) and realized P&L (−$463.75) match the BTC holdings row.
 
-**Candidate review:** _pending._
+**Candidate review:** own QA pass on desktop and phone, `pnpm test`, then imported the invalid samples scenario by scenario.
 
 ## 2026-09-23 — Invalid sample files and the semicolon hint
 

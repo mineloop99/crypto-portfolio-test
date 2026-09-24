@@ -1,12 +1,11 @@
 # AI Coding-Agent Workflow
 
-> **Draft.** Sections marked `TODO(candidate)` are mine to write — they describe my own checks and reasons, which the
-> agent cannot know. Everything else is taken from the working log in
-> [`docs/ai-workflow-notes.md`](docs/ai-workflow-notes.md) and the git history.
+> The examples are taken from the working log in [`docs/ai-workflow-notes.md`](docs/ai-workflow-notes.md) and the git
+> history. The "My review" parts and the reasons behind my decisions are my own.
 
 ## Tools and models
 
-- **Claude Code** (terminal agent) — model: `TODO(candidate)`.
+- **Claude Code** (terminal agent) — model: Claude Opus.
 - What the agent could use: this repository and a shell; Python for the reference implementation; headless Chromium
   for screenshots and scripted browser checks; the Next.js documentation bundled in `node_modules/next/dist/docs/`;
   a data-visualisation checklist with a colour-vision-deficiency palette validator.
@@ -50,8 +49,8 @@ The agent had already fetched the brief and CSVs from the Notion page the recrui
 - Wrote [`docs/PLAN.md`](docs/PLAN.md) with three open questions: persistence, per-exchange scope, and where the
   repository lives.
 
-**My review.** `TODO(candidate)` — what I checked in the plan (for example: compared the rules section with the
-brief, checked the reference totals were plausible).
+**My review.** I read the plan against the brief and answered its three open questions before any code was written
+(example 2).
 
 **Outcome.** Accepted the plan with the changes in example 2. Commit: *"Scaffold Next.js app with supplied data and
 plan"*.
@@ -72,10 +71,11 @@ plan"*.
 
 **My review and outcome.**
 - **Rejected the `localStorage` part.** Imports now live only in the open tab's memory; reload or "Reset to sample
-  data" returns to the supplied files. Reason: `TODO(candidate)`.
+  data" returns to the supplied files. Reason: the supplied CSVs already ship with the app and are the source of
+  truth. An import is a check of a file against the same format, so keeping a copy in the browser would only add a
+  second, possibly stale dataset without any requirement asking for it.
 - **Declined the per-exchange scope** — not required by the brief, so one holdings row per asset.
-- Accepted `decimal.js`, string decimals and the zod contract. `TODO(candidate)` — anything I checked here (for
-  example the `0.1 + 0.2` full-close test in [`ledger.test.ts`](tests/domain/ledger.test.ts)).
+- Accepted `decimal.js`, string decimals and the zod contract.
 
 The agent updated the plan ("Persistence decision", "Scope decision") before writing code.
 
@@ -100,8 +100,8 @@ test case asserting hand-computed numbers.
 - **Self-correction before any push:** its first commit included the assessment PDF. It removed the PDF from the
   commit and git-ignored `docs/spec/`, since the brief is not mine to publish.
 
-**My review.** `TODO(candidate)` — for example: re-did the partial-SELL case by hand (4 units at an average of 106,
-sell 1 at 130 with a fee of 1 → realized +23) and ran `pnpm test` and `python3 scripts/oracle.py` myself.
+**My review.** I ran `pnpm test` myself. For the cases I could not fully check by hand, I relied on the suite and on
+the tests in example 4, and later tried broken files against the running app (example 7).
 
 **Outcome.** Commits *"Add domain model and CSV validation"*, *"Add weighted-average cost ledger, valuation and import
 boundary"*, *"Check the supplied dataset against an independent reference"*.
@@ -127,7 +127,7 @@ computed straight from the rows: if the TypeScript engine and the Python referen
 fee rules, total P&L would still disagree with it. (The invariant cannot catch a wrong split between realized and
 unrealized P&L — the hand-computed unit tests cover that.)
 
-**My review.** `TODO(candidate)`.
+**My review.** I ran `pnpm test` again after the mutations were reverted: green.
 
 **Outcome.** Accepted. The agent judged the single failing test for the full-close mutation acceptable, because only
 a repeating-decimal case can expose the residue.
@@ -140,7 +140,13 @@ this version has breaking changes compared with the model's training data.
 **Prompt.**
 > OK, continue.
 
-(The go-ahead for M1 as defined in `docs/PLAN.md` §2, §4 and §6.)
+The prompt is short on purpose: the specification was already written and approved. It was the go-ahead for M1 as
+defined in `docs/PLAN.md`, which served as the acceptance criteria:
+- `GET`/`POST /api/portfolio`: validate the upload, compute, and return the result or a 422 with row-level errors;
+  decimals as strings (§2);
+- KPI cards, a holdings table with every required column, allocation and realized-vs-unrealized charts, and a
+  transaction explorer with search, filters, date range, sort and pagination (§4);
+- loading, empty, invalid-import, missing-price and error states; a responsive and accessible layout (§4).
 
 **Agent response.**
 - Read the bundled docs before writing framework code and applied two differences it would otherwise have missed:
@@ -153,7 +159,8 @@ this version has breaking changes compared with the model's training data.
   because the lockfile was produced by pnpm 11 and Vercel may use pnpm 10. Its first attempt silently ran pnpm 11 —
   the `packageManager` field makes pnpm switch versions — so it disabled that switch and repeated the check.
 
-**My review.** `TODO(candidate)`.
+**My review.** I did not review the framework details line by line. I checked the result instead: `pnpm test`, and
+my own QA of the running app (example 6).
 
 **Outcome.** Commits *"Add /api/portfolio with a typed contract"*, *"Build the dashboard UI"*.
 
@@ -178,8 +185,8 @@ this version has breaking changes compared with the model's training data.
   realized (10 × 180 − 2 − (10 × 200 + 2)); reset and reload return to the sample; selecting BTC filters the
   explorer to 40 trades whose fees ($486.42) and realized P&L (−$463.75) match the BTC holdings row.
 
-**My review.** `TODO(candidate)` — for example: my own pass on desktop and mobile, and whether I agreed with the
-donut → bars change.
+**My review.** I did my own QA pass of the app on a desktop browser and on a phone, and accepted the donut → bars
+change.
 
 **Outcome.** Fixes included in *"Build the dashboard UI"*.
 
@@ -206,11 +213,20 @@ donut → bars change.
   parsing them, because those exports usually use `,` as the decimal separator and guessing could produce wrong
   amounts; it told me so and offered to accept them if I preferred. I did not ask for parsing, so they stay rejected.
 - "Yes, add them." → The samples are committed so reviewers can download them from the deployed app.
-- `TODO(candidate)` — what I saw when importing the files myself.
+- I imported the files myself, scenario by scenario, and checked that each one was rejected with the message it was
+  built to trigger and that the dashboard numbers stayed unchanged.
 
 Commits: *"Explain semicolon- and tab-separated exports on import"*, *"Add invalid trades.csv samples for trying the
 validation"*.
 
 ## What I would do differently
 
-`TODO(candidate)`.
+- **Review the logic the agent adds on its own earlier.** Along the way the agent added rules the brief does not state:
+  removing the whole cost basis on a full close, the semicolon-export detection, the 2 MB upload limit, the filtering
+  helpers behind the transaction explorer. Each was reasonable, but an agent cannot always read a brief 100 % correctly.
+  Next time I would ask for a list of every rule not taken directly from the brief at each checkpoint, and review and
+  tighten those as separate diffs before building on top of them.
+- **Put the acceptance criteria in the prompt itself.** "OK, continue" worked here only because the plan already said
+  what M1 had to deliver. Restating the criteria in the go-ahead ("M1: API with 422 row errors, holdings with every
+  column, explorer filters, all five UI states, desktop and 390 px screenshots") makes each step reviewable on its own,
+  without opening the plan.
