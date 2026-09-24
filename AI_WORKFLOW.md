@@ -254,10 +254,10 @@ dates and stop them overflowing on mobile"*.
 
 How I would take the same workflow from a solo take-home to a team repository:
 
-- **CI on every push and pull request (GitHub Actions).** Install with the locked pnpm version, then run
-  `tsc --noEmit`, ESLint, `pnpm test` and `next build`; add the Python reference check (`scripts/oracle.py`) and
-  browser end-to-end tests of the import → reset → filter flow on desktop and mobile viewports. A red check blocks the
-  merge.
+- **Extend CI into a merge gate.** A first CI workflow is already in place as an extra beyond the brief
+  ([`ci.yml`](.github/workflows/ci.yml): audit, types, lint, tests, build, and the running build compared with the
+  Python reference). Next: browser end-to-end tests of the import → reset → filter flow on desktop and mobile
+  viewports, an axe accessibility run, and branch protection so a red check blocks the merge.
 - **AI review on pull requests.** Every PR gets an automated AI review (for example Claude Code's GitHub Action)
   focused on what matters most here: calculation correctness against the rules in the brief, rules the change adds
   that the brief does not state, and missing tests. The AI review is a first pass; a person still approves the merge.

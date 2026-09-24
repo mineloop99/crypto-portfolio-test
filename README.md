@@ -4,7 +4,8 @@ A dashboard that imports a crypto trade history (`trades.csv`) and a price snaps
 held, what it cost, what it is worth, and how much profit or loss has been realized and is still unrealized — using
 weighted-average cost basis with fees.
 
-**Live app:** <https://crypto-portfolio-test-zeta.vercel.app/> · **AI workflow:** [AI_WORKFLOW.md](AI_WORKFLOW.md)
+**Live app:** <https://crypto-portfolio-test-zeta.vercel.app/> · **AI workflow:** [AI_WORKFLOW.md](AI_WORKFLOW.md) ·
+**Audit:** [AUDIT.md](AUDIT.md)
 
 Reference results for the supplied data (valued at 2026-03-31 23:59:59 UTC):
 
@@ -24,6 +25,7 @@ These are cross-checked against an independent Python implementation — see [Te
 - [Import validation](#import-validation)
 - [Testing](#testing)
 - [Deployment](#deployment)
+- [Additional features (beyond the brief)](#additional-features-beyond-the-brief)
 - [Assumptions, limitations and tradeoffs](#assumptions-limitations-and-tradeoffs)
 - [Future improvements](#future-improvements)
 
@@ -212,7 +214,23 @@ Deployed on **Vercel** as a standard Next.js project — no environment variable
 `next.config.ts` lists `data/*.csv` in `outputFileTracingIncludes` so the CSVs are shipped with the serverless
 function (verified in the build's `route.js.nft.json`).
 
-**URL:** _TBD_
+**URL:** <https://crypto-portfolio-test-zeta.vercel.app/>
+
+## Additional features (beyond the brief)
+
+- **Continuous integration** — [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push to `main`
+  and every pull request: dependency audit, type check, lint, tests, a production build, a check that the CSVs are
+  shipped with the API function, and finally starts the build and compares `/api/portfolio` with the Python
+  reference ([`scripts/check-api.py`](scripts/check-api.py), to 1e-20). The same script works against any
+  deployment:
+
+  ```bash
+  python3 scripts/check-api.py https://crypto-portfolio-test-zeta.vercel.app
+  ```
+
+- **Self-audit** — [AUDIT.md](AUDIT.md): requirements coverage, calculation, security, accessibility (axe-core) and
+  performance checks, with the findings they produced and what was fixed.
+- **Security headers** — clickjacking, MIME-sniffing and referrer protection set in `next.config.ts`.
 
 ## Assumptions, limitations and tradeoffs
 
@@ -233,6 +251,6 @@ function (verified in the build's `route.js.nft.json`).
 - Import a `prices.csv` alongside trades, and show when prices are stale.
 - Optional persistence (per-user storage behind authentication) if imports need to be shared.
 - Per-exchange scope and a time series of portfolio value.
-- CI on GitHub Actions (types, lint, tests, build, browser end-to-end tests) and AI review on pull requests — see
-  "Future plan" in [AI_WORKFLOW.md](AI_WORKFLOW.md#future-plan).
+- Browser end-to-end tests in CI and AI review on pull requests — see "Future plan" in
+  [AI_WORKFLOW.md](AI_WORKFLOW.md#future-plan).
 - Dark theme with its own validated chart palette.

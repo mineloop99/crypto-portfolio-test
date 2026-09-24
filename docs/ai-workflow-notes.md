@@ -132,3 +132,21 @@ the fix is presentation only. On iOS Safari an empty date input shows no placeho
 wallet addresses. Relabelled to "From date" / "To date", fixed the "From" input overflowing the card (`min-w-0`),
 aligned the empty date inputs' height with the selects. 68 tests, `tsc` and ESLint clean; checked in a 390 px
 Chromium screenshot; redeployed to Vercel.
+
+## 2026-09-24 — Extras beyond the brief: CI and a self-audit
+
+**Prompt (translated):** "OK, do it as an additional feature — the GitHub Actions CI is an extra, separate from the
+brief. Also add an audit README and write the audit."
+
+**Agent response:**
+- `scripts/check-api.py`: compares `/api/portfolio` with `scripts/oracle.py` to 1e-20 (totals, invariant, every
+  per-asset figure). Passed on `next start` and on the live Vercel URL; shown to fail when one figure was changed by
+  one cent.
+- `.github/workflows/ci.yml`: audit, typecheck, lint, tests, oracle self-check, build, CSV tracing check, then the
+  API check against the running build.
+- Audit checks run against the deployment and the production build: security headers, oversized/garbage/unsafe
+  inputs, secret scan, `pnpm audit`, axe-core on two viewports, a 31,144-row (2 MB) import for timing.
+- Fixed what the audit found: security headers (A-1), the hidden file input's missing label — axe critical (A-2),
+  counts without thousands separators (A-3). Accepted the rest with reasons in `AUDIT.md`. 69 tests, typecheck and
+  lint clean; axe 0 violations after the fix.
+
