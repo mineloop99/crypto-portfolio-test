@@ -42,7 +42,7 @@ pnpm dev            # development server on http://localhost:3000
 | Command | What it does |
 |---|---|
 | `pnpm dev` | Development server with hot reload |
-| `pnpm test` | Full test suite (Vitest, 68 tests, < 1 s) |
+| `pnpm test` | Full test suite (Vitest, 69 tests, < 1 s) |
 | `pnpm typecheck` | Generates Next.js route types, then `tsc --noEmit` |
 | `pnpm lint` | ESLint (Next.js core-web-vitals + TypeScript rules) |
 | `pnpm build` | Production build |

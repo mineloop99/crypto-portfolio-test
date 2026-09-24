@@ -225,8 +225,10 @@ validation"*.
 
 **What I found.** The From/To inputs are the date-range filter the brief asks for, but on iOS Safari an empty date
 input shows no placeholder: they rendered as two blank boxes labelled only "From" and "To". In a crypto app that
-reads like a wallet transfer rather than a date range, and the "From" box ran past the edge of the card. I sent the
-agent a screenshot and asked for a clearer UI, and to log it here.
+reads like a wallet transfer rather than a date range, and the "From" box ran past the edge of the card.
+
+**Prompt** (excerpt, sent with a screenshot of the filters on my phone).
+> We don't have any from-address or to-address. [...] Add it to the AI workflow.
 
 **Agent response.**
 - Checked the brief: date-range filtering is a stated requirement of the transaction explorer, so the fix belongs in
