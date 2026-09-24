@@ -3,7 +3,7 @@
 import { useId, useMemo, useState } from "react";
 import type { TransactionDto } from "@/contracts/portfolio";
 import { ASSET_SYMBOLS, EXCHANGES, SIDES } from "@/domain/model";
-import { formatPrice, formatQuantity, formatUsd, formatUtc } from "@/ui/format";
+import { formatCount, formatPrice, formatQuantity, formatUsd, formatUtc } from "@/ui/format";
 import { applyFilter, dateRangeError, DEFAULT_FILTER, paginate, summarize, type TransactionFilter } from "@/ui/transactions";
 import { SignedUsd } from "./signed";
 
@@ -96,7 +96,7 @@ export function TransactionExplorer({
           <p role="alert" className="text-loss">{rangeError}</p>
         ) : (
           <p className="text-ink-2">
-            <span className="num">{summary.count}</span> of <span className="num">{transactions.length}</span> trades · gross{" "}
+            <span className="num">{formatCount(summary.count)}</span> of <span className="num">{formatCount(transactions.length)}</span> trades · gross{" "}
             <span className="num">{formatUsd(summary.grossValue)}</span> · fees <span className="num">{formatUsd(summary.fees)}</span> · realized{" "}
             <SignedUsd value={summary.realizedPnl} />
           </p>
@@ -169,7 +169,7 @@ export function TransactionExplorer({
         </p>
         <div className="flex items-center gap-2">
           <PageButton onClick={() => goTo(page - 1)} disabled={page <= 1}>Previous</PageButton>
-          <span className="num text-ink-2">Page {page} of {pageCount}</span>
+          <span className="num text-ink-2">Page {formatCount(page)} of {formatCount(pageCount)}</span>
           <PageButton onClick={() => goTo(page + 1)} disabled={page >= pageCount}>Next</PageButton>
         </div>
       </nav>

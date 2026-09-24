@@ -1,5 +1,5 @@
 import type { PortfolioResponse } from "@/contracts/portfolio";
-import { formatUsd } from "@/ui/format";
+import { formatCount, formatUsd } from "@/ui/format";
 import { SignedUsd } from "./signed";
 
 export function KpiCards({ data }: { data: PortfolioResponse }) {
@@ -13,7 +13,7 @@ export function KpiCards({ data }: { data: PortfolioResponse }) {
     { label: "Realized P&L", signed: totals.realizedPnl, note: "From sells, net of fees" },
     { label: "Unrealized P&L", signed: totals.unrealizedPnl, note: partial ?? "Value minus cost basis" },
     { label: "Total P&L", signed: totals.totalPnl, note: "Realized + unrealized" },
-    { label: "Total fees", value: formatUsd(totals.feesPaid), note: `Across ${source.tradeCount} trades` },
+    { label: "Total fees", value: formatUsd(totals.feesPaid), note: `Across ${formatCount(source.tradeCount)} trades` },
   ];
 
   return (

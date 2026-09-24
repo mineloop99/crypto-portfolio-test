@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   direction,
+  formatCount,
   formatFraction,
   formatPrice,
   formatQuantity,
@@ -10,6 +11,11 @@ import {
 } from "@/ui/format";
 
 describe("display formatting", () => {
+  it("groups trade and page counts with thousands separators", () => {
+    expect(formatCount(200)).toBe("200");
+    expect(formatCount(31144)).toBe("31,144");
+  });
+
   it("rounds USD half-up at 2 dp from the exact decimal string", () => {
     expect(formatUsd("60620.89161")).toBe("$60,620.89");
     expect(formatUsd("2708.86")).toBe("$2,708.86");

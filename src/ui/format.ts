@@ -30,6 +30,13 @@ const smallUsd = new Intl.NumberFormat("en-US", {
 const quantity = new Intl.NumberFormat("en-US", { maximumFractionDigits: 8 });
 const percent = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+const count = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+
+/** Trade and page counts: "31,144". */
+export function formatCount(value: number): string {
+  return count.format(value);
+}
+
 export function formatUsd(value: string): string {
   return usd.format(round(value, 2));
 }

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import type { PortfolioResponse } from "@/contracts/portfolio";
-import { formatUtc } from "@/ui/format";
+import { formatCount, formatUtc } from "@/ui/format";
 import type { ImportState } from "@/ui/use-portfolio";
 
 const BUTTON =
@@ -33,7 +33,7 @@ export function ImportPanel({
             <span className="text-ink-2">Trades: </span>
             <strong>{source.fileName}</strong>{" "}
             <span className="text-ink-2">
-              ({source.tradeCount} trades, {source.kind === "sample" ? "supplied sample" : "imported — kept in this tab only, not saved"})
+              ({formatCount(source.tradeCount)} trades, {source.kind === "sample" ? "supplied sample" : "imported — kept in this tab only, not saved"})
             </span>
           </p>
           <p>
@@ -55,6 +55,8 @@ export function ImportPanel({
             accept=".csv,text/csv"
             className="sr-only"
             id="trades-file"
+            aria-label="trades.csv file to import"
+            tabIndex={-1}
             disabled={busy}
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -80,7 +82,7 @@ export function ImportPanel({
         {importState.status === "importing" && <p className="mt-3 text-ink-2">Validating {importState.fileName}…</p>}
         {importState.status === "imported" && (
           <p className="mt-3 text-gain">
-            <span aria-hidden="true">✓ </span>Imported {importState.fileName}: {importState.tradeCount} trades.
+            <span aria-hidden="true">✓ </span>Imported {importState.fileName}: {formatCount(importState.tradeCount)} trades.
           </p>
         )}
       </div>
