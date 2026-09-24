@@ -4,7 +4,7 @@ A dashboard that imports a crypto trade history (`trades.csv`) and a price snaps
 held, what it cost, what it is worth, and how much profit or loss has been realized and is still unrealized — using
 weighted-average cost basis with fees.
 
-**Live app:** _TBD — added after deployment_ · **AI workflow:** [AI_WORKFLOW.md](AI_WORKFLOW.md)
+**Live app:** <https://crypto-portfolio-test-zeta.vercel.app/> · **AI workflow:** [AI_WORKFLOW.md](AI_WORKFLOW.md)
 
 Reference results for the supplied data (valued at 2026-03-31 23:59:59 UTC):
 

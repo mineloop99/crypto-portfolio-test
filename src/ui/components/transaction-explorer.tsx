@@ -11,7 +11,9 @@ const PAGE_SIZES = [25, 50, 100];
 const NUM = "px-3 py-2 text-right num whitespace-nowrap";
 const HEAD = "px-3 py-2 text-right font-medium text-ink-2 whitespace-nowrap";
 const CONTROL =
-  "mt-1 w-full rounded-md border border-line bg-surface px-2 py-1.5 text-sm focus-visible:outline-2 focus-visible:outline-action";
+  "mt-1 block w-full min-w-0 rounded-md border border-line bg-surface px-2 py-1.5 text-sm focus-visible:outline-2 focus-visible:outline-action";
+// iOS Safari draws an empty date input taller than the selects and shows no placeholder; keep the heights aligned.
+const DATE_CONTROL = `${CONTROL} min-h-[2.125rem] appearance-none text-left`;
 
 export function TransactionExplorer({
   transactions,
@@ -79,13 +81,13 @@ export function TransactionExplorer({
             ))}
           </select>
         </label>
-        <label className="text-xs text-ink-2">
-          From
-          <input type="date" value={filter.from} onChange={(e) => set("from", e.target.value)} aria-invalid={rangeError ? true : undefined} className={CONTROL} />
+        <label className="min-w-0 text-xs text-ink-2">
+          From date
+          <input type="date" value={filter.from} onChange={(e) => set("from", e.target.value)} aria-invalid={rangeError ? true : undefined} className={DATE_CONTROL} />
         </label>
-        <label className="text-xs text-ink-2">
-          To
-          <input type="date" value={filter.to} onChange={(e) => set("to", e.target.value)} aria-invalid={rangeError ? true : undefined} className={CONTROL} />
+        <label className="min-w-0 text-xs text-ink-2">
+          To date
+          <input type="date" value={filter.to} onChange={(e) => set("to", e.target.value)} aria-invalid={rangeError ? true : undefined} className={DATE_CONTROL} />
         </label>
       </form>
 

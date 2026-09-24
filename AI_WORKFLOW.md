@@ -219,6 +219,26 @@ change.
 Commits: *"Explain semicolon- and tab-separated exports on import"*, *"Add invalid trades.csv samples for trying the
 validation"*.
 
+### 8. My own mobile QA: a filter I wanted to remove
+
+**Goal and context.** After deploying to Vercel I went through the app on my phone (iOS Safari).
+
+**Prompt** (with a screenshot of the transaction filters).
+> Should we drop From and To? We don't have any from-address or to-address. This is another decision — add it to the
+> AI workflow.
+
+**Agent response.**
+- Checked the brief before deleting anything: the transaction explorer must support **date-range filtering**, and
+  From/To were those date filters. Removing them would drop a stated requirement, so it recommended keeping them.
+- Agreed the labels were the real problem. On iOS Safari an empty date input shows no placeholder, so a bare
+  "From"/"To" reads like a wallet transfer — a natural reading for a crypto app. It renamed them "From date" and
+  "To date".
+- The same screenshot showed the "From" box running past the edge of the card. It fixed the overflow (`min-w-0` on
+  the grid items and inputs) and aligned the height of the empty date inputs with the selects.
+
+**My review and outcome.** Kept the date filters with the new labels. The misunderstanding came from a real user
+reading, so the fix was clearer wording, not a smaller feature.
+
 ## What I would do differently
 
 - **Review the logic the agent adds on its own earlier.** Along the way the agent added rules the brief does not state:

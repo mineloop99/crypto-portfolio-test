@@ -109,6 +109,17 @@ make that ambiguous) and told the candidate so. "Yes, add them" → the samples 
 `public/samples/invalid/`. The candidate's local `allowedDevOrigins` edit in `next.config.ts` is dev-only and stays
 uncommitted, at the candidate's request.
 
+## 2026-09-24 — Candidate's mobile QA: the From/To filters
+
+**Prompt (translated, with an iOS screenshot):** "Should we drop From and To? We don't have any from-address or
+to-address. This is another decision — add it to the AI workflow."
+
+**Agent response:** checked the brief first — "Date-range filtering" is a stated requirement of the transaction
+explorer, and From/To are those date inputs; on iOS Safari an empty date input shows no placeholder, so the bare
+labels read like wallet addresses. Recommended keeping the feature: relabelled to "From date" / "To date", fixed the
+"From" input overflowing the card (`min-w-0`), aligned the empty date inputs' height with the selects. 68 tests,
+`tsc` and ESLint clean; checked in a 390 px Chromium screenshot (iOS itself to be re-checked by the candidate).
+
 ## 2026-09-23 — M2 (part 1): docs, deployment readiness
 
 **Prompt (translated):** "OK, carry on — I don't need to deploy yet."
