@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Types, lint, tests, build, API check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Uses the pnpm version pinned in package.json ("packageManager").
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Dependency audit (production, high and critical)
+        run: pnpm audit --prod --audit-level high
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit, golden and API tests
+        run: pnpm test
+
+      - name: Reference implementation agrees with its own invariant
+        run: |
+          python3 scripts/oracle.py > oracle.json
+          python3 - <<'PY'
+          import json
+          from decimal import Decimal
+          d = json.load(open("oracle.json"))
+          diff = abs(Decimal(d["totals"]["totalPnl"]) - Decimal(d["invariantTotalPnl"]))
+          assert diff < Decimal("1e-20"), f"oracle total P&L differs from the invariant by {diff}"
+          print("oracle total P&L =", d["invariantTotalPnl"])
+          PY
+
+      - name: Production build
+        run: pnpm build
+
+      - name: Supplied CSVs are shipped with the API function
+        run: |
+          nft=.next/server/app/api/portfolio/route.js.nft.json
+          grep -q 'data/trades.csv' "$nft" && grep -q 'data/prices.csv' "$nft"
+
+      - name: Running build agrees with the reference implementation
+        run: |
+          PORT=3000 pnpm start > next.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:3000/api/portfolio -o /dev/null && break; sleep 1; done
+          python3 scripts/check-api.py http://127.0.0.1:3000 || { cat next.log; exit 1; }
